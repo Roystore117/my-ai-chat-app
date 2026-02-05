@@ -1,21 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 
 // 紙吹雪のパーティクル
 function Confetti({ active }: { active: boolean }) {
-  if (!active) return null;
-
   const colors = ["#FF6B6B", "#4ECDC4", "#FFE66D", "#95E1D3", "#F38181", "#AA96DA", "#FCBAD3"];
-  const confettiPieces = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    color: colors[i % colors.length],
-    left: Math.random() * 100,
-    delay: Math.random() * 0.5,
-    duration: 1 + Math.random() * 1,
-    rotation: Math.random() * 360,
-  }));
+
+  // useMemoで紙吹雪データを固定
+  const confettiPieces = useMemo(() =>
+    Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      color: colors[i % colors.length],
+      left: (i * 3.3) + (i % 7) * 2,
+      delay: (i % 5) * 0.1,
+      duration: 1 + (i % 3) * 0.5,
+      rotation: (i * 12) % 360,
+    })), []);
+
+  if (!active) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-visible">
